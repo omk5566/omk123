@@ -1,0 +1,361 @@
+1.Wrie c++ program to implement mid-square digit hashing function
+	
+	#include <iostream>
+#include <cmath>
+using namespace std;
+
+int midSquareHash(int key, int tableSize) {
+    int squaredKey = key * key;
+    int numDigits = log10(squaredKey) + 1;
+    int startPos = numDigits / 4;
+    int middleDigits = squaredKey / pow(10, startPos) % (int)pow(10, numDigits / 2);
+    return middleDigits % tableSize;
+}
+
+int main() {
+    int key, tableSize;
+    cout << "Enter key: ";
+    cin >> key;
+    cout << "Enter table size: ";
+    cin >> tableSize;
+
+    cout << "Hash value: " << midSquareHash(key, tableSize) << endl;
+    return 0;
+}
+
+
+2.Write c++ program to implement hashing function (k mod 7)
+
+	#include <iostream>
+using namespace std;
+
+int hashFunction(int key) {
+    return key % 7;
+}
+
+int main() {
+    int key;
+    cout << "Enter key: ";
+    cin >> key;
+
+    cout << "Hash value (k mod 7): " << hashFunction(key) << endl;
+    return 0;
+}
+
+
+3.Write C++ program to implement AVL tree with LR-rotations.
+
+	#include <iostream>
+using namespace std;
+
+class AVLTree {
+private:
+    struct Node {
+        int key;
+        Node* left;
+        Node* right;
+        int height;
+        Node(int val) : key(val), left(nullptr), right(nullptr), height(1) {}
+    };
+
+    Node* root;
+
+    int height(Node* node) {
+        return node ? node->height : 0;
+    }
+
+    int balanceFactor(Node* node) {
+        return node ? height(node->left) - height(node->right) : 0;
+    }
+
+    Node* leftRotate(Node* x) {
+        Node* y = x->right;
+        x->right = y->left;
+        y->left = x;
+        x->height = max(height(x->left), height(x->right)) + 1;
+        y->height = max(height(y->left), height(y->right)) + 1;
+        return y;
+    }
+
+    Node* rightRotate(Node* y) {
+        Node* x = y->left;
+        y->left = x->right;
+        x->right = y;
+        y->height = max(height(y->left), height(y->right)) + 1;
+        x->height = max(height(x->left), height(x->right)) + 1;
+        return x;
+    }
+
+    Node* leftRightRotate(Node* node) {
+        node->left = leftRotate(node->left);
+        return rightRotate(node);
+    }
+
+    Node* insert(Node* node, int key) {
+        if (!node) return new Node(key);
+
+        if (key < node->key)
+            node->left = insert(node->left, key);
+        else if (key > node->key)
+            node->right = insert(node->right, key);
+        else
+            return node;
+
+        node->height = 1 + max(height(node->left), height(node->right));
+
+        int balance = balanceFactor(node);
+
+        if (balance > 1 && key < node->left->key) {
+            return rightRotate(node);
+        }
+        if (balance < -1 && key > node->right->key) {
+            return leftRotate(node);
+        }
+        if (balance > 1 && key > node->left->key) {
+            return leftRightRotate(node);
+        }
+
+        return node;
+    }
+
+    void inorder(Node* node) {
+        if (node) {
+            inorder(node->left);
+            cout << node->key << " ";
+            inorder(node->right);
+        }
+    }
+
+public:
+    AVLTree() : root(nullptr) {}
+
+    void insert(int key) {
+        root = insert(root, key);
+    }
+
+    void inorder() {
+        inorder(root);
+        cout << endl;
+    }
+};
+
+int main() {
+    AVLTree tree;
+    tree.insert(30);
+    tree.insert(20);
+    tree.insert(10);
+    tree.insert(25);
+    tree.insert(5);
+
+    cout << "In-order traversal of the AVL tree: ";
+    tree.inorder();
+
+    return 0;
+}
+
+4. Write C++ program to implement Heapify .
+	
+	#include <iostream>
+using namespace std;
+
+void heapify(int arr[], int n, int i) {
+    int largest = i;
+    int left = 2 * i + 1;
+    int right = 2 * i + 2;
+
+    if (left < n && arr[left] > arr[largest])
+        largest = left;
+    if (right < n && arr[right] > arr[largest])
+        largest = right;
+
+    if (largest != i) {
+        swap(arr[i], arr[largest]);
+        heapify(arr, n, largest);
+    }
+}
+
+void buildMaxHeap(int arr[], int n) {
+    for (int i = n / 2 - 1; i >= 0; i--) {
+        heapify(arr, n, i);
+    }
+}
+
+void printArray(int arr[], int n) {
+    for (int i = 0; i < n; i++) {
+        cout << arr[i] << " ";
+    }
+    cout << endl;
+}
+
+int main() {
+    int arr[] = {4, 10, 3, 5, 1};
+    int n = sizeof(arr) / sizeof(arr[0]);
+
+    buildMaxHeap(arr, n);
+    cout << "Max-Heap: ";
+    printArray(arr, n);
+
+    return 0;
+}
+
+#include <iostream>
+using namespace std;
+
+void heapify(int arr[], int n, int i) {
+    int largest = i;
+    int left = 2 * i + 1;
+    int right = 2 * i + 2;
+
+    if (left < n && arr[left] > arr[largest])
+        largest = left;
+    if (right < n && arr[right] > arr[largest])
+        largest = right;
+
+    if (largest != i) {
+        swap(arr[i], arr[largest]);
+        heapify(arr, n, largest);
+    }
+}
+
+void buildMaxHeap(int arr[], int n) {
+    for (int i = n / 2 - 1; i >= 0; i--) {
+        heapify(arr, n, i);
+    }
+}
+
+void printArray(int arr[], int n) {
+    for (int i = 0; i < n; i++) {
+        cout << arr[i] << " ";
+    }
+    cout << endl;
+}
+
+int main() {
+    int arr[] = {4, 10, 3, 5, 1};
+    int n = sizeof(arr) / sizeof(arr[0]);
+
+    buildMaxHeap(arr, n);
+    cout << "Max-Heap: ";
+    printArray(arr, n);
+
+    return 0;
+}
+
+#include <iostream>
+using namespace std;
+
+void heapify(int arr[], int n, int i) {
+    int largest = i;
+    int left = 2 * i + 1;
+    int right = 2 * i + 2;
+
+    if (left < n && arr[left] > arr[largest])
+        largest = left;
+    if (right < n && arr[right] > arr[largest])
+        largest = right;
+
+    if (largest != i) {
+        swap(arr[i], arr[largest]);
+        heapify(arr, n, largest);
+    }
+}
+
+void buildMaxHeap(int arr[], int n) {
+    for (int i = n / 2 - 1; i >= 0; i--) {
+        heapify(arr, n, i);
+    }
+}
+
+void printArray(int arr[], int n) {
+    for (int i = 0; i < n; i++) {
+        cout << arr[i] << " ";
+    }
+    cout << endl;
+}
+
+int main() {
+    int arr[] = {4, 10, 3, 5, 1};
+    int n = sizeof(arr) / sizeof(arr[0]);
+
+    buildMaxHeap(arr, n);
+    cout << "Max-Heap: ";
+    printArray(arr, n);
+
+    return 0;
+}
+
+
+5. Write C++ program to implement Dijkstras shortest path algorithm with suitable
+example.
+
+
+	#include <iostream>
+#include <vector>
+#include <climits>
+using namespace std;
+
+class Graph {
+private:
+    int V;
+    vector<vector<int>> adjMatrix;
+
+public:
+    Graph(int vertices) : V(vertices), adjMatrix(vertices, vector<int>(vertices, INT_MAX)) {}
+
+    void addEdge(int u, int v, int weight) {
+        adjMatrix[u][v] = weight;
+        adjMatrix[v][u] = weight;
+    }
+
+    void dijkstra(int src) {
+        vector<int> dist(V, INT_MAX);
+        vector<bool> sptSet(V, false);
+        dist[src] = 0;
+
+        for (int count = 0; count < V - 1; count++) {
+            int minDist = INT_MAX, u;
+            for (int v = 0; v < V; v++) {
+                if (!sptSet[v] && dist[v] <= minDist) {
+                    minDist = dist[v];
+                    u = v;
+                }
+            }
+
+            sptSet[u] = true;
+
+            for (int v = 0; v < V; v++) {
+                if (!sptSet[v] && adjMatrix[u][v] != INT_MAX && dist[u] != INT_MAX && dist[u] + adjMatrix[u][v] < dist[v]) {
+                    dist[v] = dist[u] + adjMatrix[u][v];
+                }
+            }
+        }
+
+        cout << "Vertex\tDistance from Source" << endl;
+        for (int i = 0; i < V; i++) {
+            cout << i << "\t" << dist[i] << endl;
+        }
+    }
+};
+
+int main() {
+    Graph g(9);
+    g.addEdge(0, 1, 4);
+    g.addEdge(0, 7, 8);
+    g.addEdge(1, 2, 8);
+    g.addEdge(1, 7, 11);
+    g.addEdge(2, 3, 7);
+    g.addEdge(2, 5, 4);
+    g.addEdge(2, 8, 2);
+    g.addEdge(3, 4, 9);
+    g.addEdge(3, 5, 14);
+    g.addEdge(4, 5, 10);
+    g.addEdge(5, 6, 2);
+    g.addEdge(6, 7, 1);
+    g.addEdge(6, 8, 6);
+    g.addEdge(7, 8, 7);
+
+    g.dijkstra(0);
+
+    return 0;
+}
+
