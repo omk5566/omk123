@@ -1,0 +1,332 @@
+11. Write C++ program to implement AVL tree with RL-rotations.
+#include <iostream>
+#include <algorithm>
+using namespace std;
+
+class AVLTree {
+private:
+    struct Node {
+        int key;
+        Node* left;
+        Node* right;
+        int height;
+        Node(int val) : key(val), left(nullptr), right(nullptr), height(1) {}
+    };
+
+    Node* root;
+
+    int height(Node* node) {
+        return node ? node->height : 0;
+    }
+
+    int balanceFactor(Node* node) {
+        return node ? height(node->left) - height(node->right) : 0;
+    }
+
+    Node* leftRotate(Node* x) {
+        Node* y = x->right;
+        x->right = y->left;
+        y->left = x;
+        x->height = max(height(x->left), height(x->right)) + 1;
+        y->height = max(height(y->left), height(y->right)) + 1;
+        return y;
+    }
+
+    Node* rightRotate(Node* y) {
+        Node* x = y->left;
+        y->left = x->right;
+        x->right = y;
+        y->height = max(height(y->left), height(y->right)) + 1;
+        x->height = max(height(x->left), height(x->right)) + 1;
+        return x;
+    }
+
+    Node* rightLeftRotate(Node* node) {
+        node->right = rightRotate(node->right);
+        return leftRotate(node);
+    }
+
+    Node* insert(Node* node, int key) {
+        if (!node) return new Node(key);
+
+        if (key < node->key)
+            node->left = insert(node->left, key);
+        else if (key > node->key)
+            node->right = insert(node->right, key);
+
+        node->height = 1 + max(height(node->left), height(node->right));
+
+        int balance = balanceFactor(node);
+
+        if (balance < -1 && key < node->right->key)
+            return rightLeftRotate(node);
+
+        return node;
+    }
+
+    void inorder(Node* node) {
+        if (node) {
+            inorder(node->left);
+            cout << node->key << " ";
+            inorder(node->right);
+        }
+    }
+
+public:
+    AVLTree() : root(nullptr) {}
+
+    void insert(int key) {
+        root = insert(root, key);
+    }
+
+    void inorder() {
+        inorder(root);
+        cout << endl;
+    }
+};
+
+int main() {
+    AVLTree tree;
+    tree.insert(10);
+    tree.insert(20);
+    tree.insert(15); // RL Rotation will be triggered
+
+    cout << "In-order traversal of the AVL tree: ";
+    tree.inorder();
+
+    return 0;
+}
+
+
+12.Write c++ program to create max-heap
+
+	#include <iostream>
+#include <vector>
+using namespace std;
+
+void heapify(vector<int>& arr, int n, int i) {
+    int largest = i;
+    int left = 2 * i + 1;
+    int right = 2 * i + 2;
+
+    if (left < n && arr[left] > arr[largest])
+        largest = left;
+
+    if (right < n && arr[right] > arr[largest])
+        largest = right;
+
+    if (largest != i) {
+        swap(arr[i], arr[largest]);
+        heapify(arr, n, largest);
+    }
+}
+
+void buildMaxHeap(vector<int>& arr) {
+    int n = arr.size();
+    for (int i = n / 2 - 1; i >= 0; i--) {
+        heapify(arr, n, i);
+    }
+}
+
+void printHeap(const vector<int>& arr) {
+    for (int val : arr) {
+        cout << val << " ";
+    }
+    cout << endl;
+}
+
+int main() {
+    vector<int> arr = {4, 10, 3, 5, 1};
+    buildMaxHeap(arr);
+    cout << "Max Heap: ";
+    printHeap(arr);
+    return 0;
+}
+
+
+13.Write C++ program to create min –heap.
+
+	#include <iostream>
+#include <vector>
+using namespace std;
+
+void heapify(vector<int>& arr, int n, int i) {
+    int smallest = i;
+    int left = 2 * i + 1;
+    int right = 2 * i + 2;
+
+    if (left < n && arr[left] < arr[smallest])
+        smallest = left;
+
+    if (right < n && arr[right] < arr[smallest])
+        smallest = right;
+
+    if (smallest != i) {
+        swap(arr[i], arr[smallest]);
+        heapify(arr, n, smallest);
+    }
+}
+
+void buildMinHeap(vector<int>& arr) {
+    int n = arr.size();
+    for (int i = n / 2 - 1; i >= 0; i--) {
+        heapify(arr, n, i);
+    }
+}
+
+void printHeap(const vector<int>& arr) {
+    for (int val : arr) {
+        cout << val << " ";
+    }
+    cout << endl;
+}
+
+int main() {
+    vector<int> arr = {4, 10, 3, 5, 1};
+    buildMinHeap(arr);
+    cout << "Min Heap: ";
+    printHeap(arr);
+    return 0;
+}
+
+
+14 Write C++ program to perform the following operations on SET: Intersection .
+
+	#include <iostream>
+#include <set>
+using namespace std;
+
+void printSet(const set<int>& s) {
+    for (int elem : s) {
+        cout << elem << " ";
+    }
+    cout << endl;
+}
+
+int main() {
+    set<int> set1 = {1, 2, 3, 4, 5};
+    set<int> set2 = {3, 4, 5, 6, 7};
+
+    set<int> intersectionSet;
+    for (int elem : set1) {
+        if (set2.find(elem) != set2.end()) {
+            intersectionSet.insert(elem);
+        }
+    }
+
+    cout << "Intersection of Set1 and Set2: ";
+    printSet(intersectionSet);
+
+    return 0;
+}
+
+
+15. Write C++ program to traverse AVL tree: Pre-order .
+
+	#include <iostream>
+#include <algorithm>
+using namespace std;
+
+class AVLTree {
+private:
+    struct Node {
+        int key;
+        Node* left;
+        Node* right;
+        int height;
+        Node(int val) : key(val), left(nullptr), right(nullptr), height(1) {}
+    };
+
+    Node* root;
+
+    int height(Node* node) {
+        return node ? node->height : 0;
+    }
+
+    int balanceFactor(Node* node) {
+        return node ? height(node->left) - height(node->right) : 0;
+    }
+
+    Node* leftRotate(Node* x) {
+        Node* y = x->right;
+        x->right = y->left;
+        y->left = x;
+        x->height = max(height(x->left), height(x->right)) + 1;
+        y->height = max(height(y->left), height(y->right)) + 1;
+        return y;
+    }
+
+    Node* rightRotate(Node* y) {
+        Node* x = y->left;
+        y->left = x->right;
+        x->right = y;
+        y->height = max(height(y->left), height(y->right)) + 1;
+        x->height = max(height(x->left), height(x->right)) + 1;
+        return x;
+    }
+
+    Node* insert(Node* node, int key) {
+        if (!node) return new Node(key);
+
+        if (key < node->key)
+            node->left = insert(node->left, key);
+        else if (key > node->key)
+            node->right = insert(node->right, key);
+
+        node->height = 1 + max(height(node->left), height(node->right));
+
+        int balance = balanceFactor(node);
+
+        if (balance > 1 && key < node->left->key)
+            return rightRotate(node);
+
+        if (balance < -1 && key > node->right->key)
+            return leftRotate(node);
+
+        if (balance > 1 && key > node->left->key) {
+            node->left = leftRotate(node->left);
+            return rightRotate(node);
+        }
+
+        if (balance < -1 && key < node->right->key) {
+            node->right = rightRotate(node->right);
+            return leftRotate(node);
+        }
+
+        return node;
+    }
+
+    void preorder(Node* node) {
+        if (node) {
+            cout << node->key << " ";
+            preorder(node->left);
+            preorder(node->right);
+        }
+    }
+
+public:
+    AVLTree() : root(nullptr) {}
+
+    void insert(int key) {
+        root = insert(root, key);
+    }
+
+    void preorder() {
+        preorder(root);
+        cout << endl;
+    }
+};
+
+int main() {
+    AVLTree tree;
+    tree.insert(30);
+    tree.insert(20);
+    tree.insert(10); // LL Rotation will be triggered
+
+    cout << "Pre-order traversal of the AVL tree: ";
+    tree.preorder();
+
+    return 0;
+}
+
+	
